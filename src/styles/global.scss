@@ -1,0 +1,28 @@
+// Global styles
+// Fonts
+@import url("./reset.scss");
+@import url("https://fonts.googleapis.com/css2?family=Victor+Mono:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&display=swap");
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px; // Отступ для фиксированного хедера
+}
+
+* {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: "Roboto Condensed", sans-serif;
+    overflow-x: hidden; // Предотвращаем горизонтальный скролл
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Victor Mono", monospace;
+}

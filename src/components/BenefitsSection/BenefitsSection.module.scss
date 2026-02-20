@@ -1,0 +1,141 @@
+@import "../../styles/variables.scss";
+
+.benefits {
+    position: relative;
+    padding: $spacing-xxl 0 ($spacing-xxl * 1.5);
+    background-color: $color-green-light;
+    background-image: url("../../assets/images/benefits-bg.png");
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-size: cover;
+    color: $color-white;
+    text-align: center;
+}
+
+// .benefits::after {
+//     content: "";
+//     position: absolute;
+//     left: 0;
+//     right: 0;
+//     bottom: 0;
+//     height: 140px;
+//     background-image: url("../../assets/images/benefits-bg2.png");
+//     background-repeat: no-repeat;
+//     background-position: bottom center;
+//     background-size: cover;
+//     pointer-events: none;
+// }
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 $spacing-lg;
+}
+
+.header {
+    max-width: 720px;
+    margin: 0 auto $spacing-xl auto;
+}
+
+.title {
+    font-family: $font-heading;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 700;
+    color: #ff4a3b;
+    margin-bottom: $spacing-md;
+}
+
+.subtitle {
+    font-family: $font-body;
+    font-size: clamp(1.1rem, 1.5vw, 1.7rem);
+    line-height: 1.3;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: $spacing-lg;
+}
+
+.card {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: $spacing-md $spacing-sm $spacing-sm;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.cardIcon {
+    margin-bottom: $spacing-md;
+
+    img {
+        width: 110px;
+        height: 110px;
+        object-fit: contain;
+        display: block;
+    }
+}
+
+.cardTitle {
+    font-family: $font-body;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333333;
+    line-height: 1.4;
+}
+
+// Tablet
+@media (max-width: $breakpoint-tablet) {
+    .container {
+        padding: 0 $spacing-md;
+    }
+
+    .cards {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: $spacing-md;
+    }
+
+    .card {
+        flex: 0 1 45%;
+        max-width: 260px;
+    }
+}
+
+// Mobile
+@media (max-width: $breakpoint-mobile) {
+    .container {
+        padding: 0 $spacing-sm;
+    }
+
+    .header {
+        margin-bottom: $spacing-lg;
+    }
+
+    .cards {
+        justify-content: center;
+        gap: $spacing-md;
+    }
+}
+
+// Extra small
+@media (max-width: 480px) {
+    .cards {
+        justify-content: center;
+        gap: $spacing-md;
+    }
+
+    .card {
+        flex: 0 1 100%;
+        max-width: 320px;
+    }
+
+    .cardIcon img {
+        width: 90px;
+        height: 90px;
+    }
+}

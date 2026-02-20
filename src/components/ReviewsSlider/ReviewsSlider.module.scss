@@ -1,0 +1,272 @@
+@import "../../styles/variables.scss";
+
+.reviews {
+    padding: $spacing-xxl 0;
+    background-color: $color-white;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 $spacing-lg;
+}
+
+.title {
+    font-family: $font-heading;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    color: #ff4a3b;
+    text-align: center;
+    margin-bottom: $spacing-xl;
+}
+
+.swiperWrapper {
+    position: relative;
+}
+
+.swiper {
+    padding-bottom: 3rem;
+}
+
+.slide {
+    height: auto;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.speechBubble {
+    position: relative;
+    background-color: #62902b;
+    border-radius: 16px;
+    padding: $spacing-lg;
+    margin-bottom: $spacing-md;
+    min-height: 200px;
+    display: flex;
+    align-items: flex-start;
+
+    &::after {
+        content: "";
+        position: absolute;
+        bottom: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 0;
+        border-left: 15px solid transparent;
+        border-right: 15px solid transparent;
+        border-top: 15px solid #62902b;
+    }
+}
+
+.reviewText {
+    font-family: $font-body;
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: $color-white;
+    margin: 0;
+}
+
+.cardInfo {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xs;
+    padding: 0 $spacing-sm;
+}
+
+.rating {
+    display: flex;
+    gap: 0.25rem;
+    margin-bottom: $spacing-xs;
+}
+
+.star {
+    font-size: 1.3rem;
+    color: #dddddd;
+    line-height: 1;
+}
+
+.starFilled {
+    color: #ff4a3b;
+}
+
+.reviewerName {
+    font-family: $font-body;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #222222;
+    margin: 0;
+}
+
+// Swiper pagination customization
+:global(.swiper-pagination) {
+    position: relative !important;
+    bottom: 0 !important;
+    margin-top: $spacing-lg;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+:global(.swiper-pagination-bullet) {
+    width: 12px !important;
+    height: 12px !important;
+    border-radius: 50% !important;
+    background-color: #dddddd !important;
+    opacity: 1 !important;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 0 !important;
+}
+
+:global(.swiper-pagination-bullet-active) {
+    background-color: #ff4a3b !important;
+}
+
+// Navigation arrows
+.swiperButton {
+    position: absolute;
+    bottom: 0;
+    transform: translateY(50%);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid #ff4a3b;
+    background-color: $color-white;
+    color: #ff4a3b;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+    padding: 0;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 45%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 2rem;
+        font-weight: 300;
+        line-height: 1;
+    }
+
+    &:hover {
+        background-color: #ff4a3b;
+        color: $color-white;
+        transform: translateY(50%) scale(1.1);
+        box-shadow: 0 4px 12px rgba(255, 74, 59, 0.3);
+    }
+
+    &:active {
+        transform: translateY(50%) scale(0.95);
+    }
+}
+
+.swiperButtonPrev {
+    left: calc(50% - 120px);
+
+    &::before {
+        content: "‹";
+    }
+}
+
+.swiperButtonNext {
+    right: calc(50% - 120px);
+
+    &::before {
+        content: "›";
+    }
+}
+
+:global(.swiper-button-disabled) {
+    opacity: 0.3 !important;
+    cursor: not-allowed !important;
+
+    &:hover {
+        background-color: $color-white !important;
+        transform: translateY(50%) !important;
+    }
+
+    &::before {
+        opacity: 0.3;
+    }
+}
+
+// Tablet
+@media (max-width: $breakpoint-tablet) {
+    .container {
+        padding: 0 $spacing-md;
+    }
+
+    .swiperButton {
+        width: 40px;
+        height: 40px;
+        font-size: 1.5rem;
+
+        &::before {
+            font-size: 1.5rem;
+        }
+    }
+
+    .swiperButtonPrev {
+        left: calc(50% - 100px);
+    }
+
+    .swiperButtonNext {
+        right: calc(50% - 100px);
+    }
+
+    .speechBubble {
+        min-height: 180px;
+    }
+}
+
+// Mobile
+@media (max-width: $breakpoint-mobile) {
+    .reviews {
+        padding: $spacing-xl 0;
+    }
+
+    .container {
+        padding: 0 $spacing-sm;
+    }
+
+    .title {
+        margin-bottom: $spacing-lg;
+    }
+
+    .swiperButton {
+        width: 36px;
+        height: 36px;
+        font-size: 1.3rem;
+
+        &::before {
+            font-size: 1.3rem;
+        }
+    }
+
+    .swiperButtonPrev {
+        left: calc(50% - 80px);
+    }
+
+    .swiperButtonNext {
+        right: calc(50% - 80px);
+    }
+
+    .speechBubble {
+        min-height: 160px;
+        padding: $spacing-md;
+    }
+
+    .reviewText {
+        font-size: 1.1rem;
+    }
+}

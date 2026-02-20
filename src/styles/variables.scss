@@ -1,0 +1,33 @@
+// SCSS Variables
+
+// Colors
+$color-primary: #4CAF50;
+$color-primary-dark: #45a049;
+$color-primary-light: #66BB6A;
+$color-red: #F44336;
+$color-white: #FFFFFF;
+$color-black: #000000;
+$color-green-dark: #2E7D32;
+$color-green-light: #81C784;
+$color-hover: #7CB93C;
+
+// Fonts
+$font-heading: 'Victor Mono', monospace;
+$font-body: 'Roboto Condensed', sans-serif;
+
+// Breakpoints
+$breakpoint-mobile: 768px;
+$breakpoint-tablet: 1024px;
+$breakpoint-desktop: 1440px;
+
+// Spacing
+$spacing-xs: 0.5rem;
+$spacing-sm: 1rem;
+$spacing-md: 1.5rem;
+$spacing-lg: 2rem;
+$spacing-xl: 3rem;
+$spacing-xxl: 4rem;
+
+// Z-index
+$z-header: 1000;
+$z-menu: 1001;

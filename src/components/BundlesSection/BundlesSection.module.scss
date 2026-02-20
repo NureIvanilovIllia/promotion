@@ -1,0 +1,399 @@
+@import "../../styles/variables.scss";
+
+.bundles {
+    padding: $spacing-xxl 0;
+    background-color: $color-white;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 $spacing-lg;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: $spacing-xl;
+}
+
+.title {
+    font-family: $font-heading;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    color: #ff4a3b;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: $spacing-xl;
+}
+
+.card {
+    background-color: #fdfdfd;
+    border-radius: 16px;
+    box-shadow: 4px 10px 20px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.imageWrapper {
+    width: 100%;
+    overflow: hidden;
+}
+
+.image {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+.content {
+    padding: $spacing-lg $spacing-lg $spacing-md;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+}
+
+.cardTitle {
+    font-family: $font-heading;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #222222;
+    text-align: left;
+}
+
+.cardTitleHighlight {
+    color: #ff4a3b;
+}
+
+.cardDescription {
+    font-family: $font-body;
+    font-size: 0.95rem;
+    color: #666666;
+    text-align: left;
+}
+
+.badgeContainer {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    margin-top: $spacing-xs;
+}
+
+.densityBadge {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ff4a3b;
+    border-radius: 999px;
+    background-color: #ffffff;
+    font-family: $font-body;
+    font-size: 0.9rem;
+    color: #607d8b;
+    white-space: nowrap;
+}
+
+.infoButton {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 1px solid #ff4a3b;
+    background-color: #ffffff;
+    color: #ff4a3b;
+    font-family: $font-heading;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+
+    &:hover {
+        background-color: #ff4a3b;
+        color: #ffffff;
+    }
+}
+
+.divider {
+    width: 40px;
+    height: 2px;
+    background-color: #dddddd;
+    margin: $spacing-sm 0 0;
+}
+
+.footer {
+    margin-top: $spacing-md;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.priceValue {
+    font-family: $font-heading;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #ff4a3b;
+}
+
+.buyButton {
+    padding: 0.7rem 1.8rem;
+    border-radius: 999px;
+    border: 1px solid $color-primary;
+    background: linear-gradient(
+        90deg,
+        $color-primary-light 0%,
+        $color-primary 100%
+    );
+    color: $color-white;
+    font-family: $font-body;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.35);
+
+    &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(76, 175, 80, 0.5);
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+}
+
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    animation: fadeInOverlay 0.3s ease-out forwards;
+}
+
+@keyframes fadeInOverlay {
+    from {
+        background-color: rgba(0, 0, 0, 0);
+    }
+    to {
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+}
+
+@keyframes fadeOutOverlay {
+    from {
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+    to {
+        background-color: rgba(0, 0, 0, 0);
+    }
+}
+
+.modalOverlayClosing {
+    animation: fadeOutOverlay 0.3s ease-in forwards;
+}
+
+.modal {
+    background-color: #ffffff;
+    border-radius: 16px;
+    max-width: 520px;
+    width: 100%;
+    padding: $spacing-lg;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+    transform: scale(0.8) translateY(-20px);
+    opacity: 0;
+    animation: modalAppear 0.2s ease-out forwards;
+}
+
+@keyframes modalAppear {
+    from {
+        transform: scale(0.8) translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes modalDisappear {
+    from {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+    to {
+        transform: scale(0.8) translateY(-20px);
+        opacity: 0;
+    }
+}
+
+.modalClosing {
+    animation: modalDisappear 0.2s ease-in forwards;
+}
+
+.modalHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: $spacing-sm;
+}
+
+.modalTitle {
+    font-family: $font-heading;
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.modalClose {
+    border: none;
+    background: transparent;
+    font-size: 1.6rem;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.modalNote {
+    font-family: $font-body;
+    font-size: 0.95rem;
+    color: #555555;
+    margin-bottom: $spacing-md;
+}
+
+.modalList {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xs;
+}
+
+.modalListItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    font-family: $font-body;
+    font-size: 0.95rem;
+}
+
+.modalItemName {
+    flex: 1;
+    text-align: left;
+    margin-right: $spacing-sm;
+}
+
+.modalItemQty {
+    white-space: nowrap;
+    font-weight: 600;
+}
+
+// Simple "added to cart" notification modal
+.addedModalOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.35);
+}
+
+.addedModal {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: $spacing-md $spacing-lg;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    max-width: 420px;
+    width: calc(100% - 2 * $spacing-md);
+    text-align: center;
+}
+
+.addedModalText {
+    font-family: $font-heading;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: $spacing-md;
+    color: #222222;
+}
+
+.addedModalActions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-sm;
+    justify-content: center;
+}
+
+.addedModalSecondaryButton,
+.addedModalPrimaryButton {
+    padding: 0.6rem 1.6rem;
+    border-radius: 999px;
+    font-family: $font-body;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+
+.addedModalSecondaryButton {
+    background-color: #ffffff;
+    border-color: #dddddd;
+    color: #555555;
+
+    &:hover {
+        background-color: #f5f5f5;
+    }
+}
+
+.addedModalPrimaryButton {
+    border-color: $color-primary;
+    background: linear-gradient(
+        90deg,
+        $color-primary-light 0%,
+        $color-primary 100%
+    );
+    color: $color-white;
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.35);
+
+    &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(76, 175, 80, 0.5);
+    }
+}
+
+// Tablet
+@media (max-width: $breakpoint-tablet) {
+    .container {
+        padding: 0 $spacing-md;
+    }
+
+    .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: $spacing-lg;
+    }
+}
+
+// Mobile
+@media (max-width: $breakpoint-mobile) {
+    .bundles {
+        padding: $spacing-xl 0;
+    }
+
+    .container {
+        padding: 0 $spacing-sm;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+        gap: $spacing-lg;
+    }
+
+    .content {
+        padding: $spacing-md $spacing-md $spacing-sm;
+    }
+}

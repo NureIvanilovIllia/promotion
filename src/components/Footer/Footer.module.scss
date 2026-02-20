@@ -1,0 +1,101 @@
+@import "../../styles/variables.scss";
+
+.footer {
+    padding: $spacing-xxl 0;
+    background-color: $color-white;
+    text-align: center;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 $spacing-lg;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $spacing-lg;
+}
+
+.logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $spacing-sm;
+}
+
+.logoIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    img {
+        width: clamp(80px, 10vw, 150px);
+        display: block;
+    }
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navList {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: clamp(1.5rem, 3vw, 3rem);
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.navItem {
+    margin: 0;
+}
+
+.navLink {
+    font-family: $font-body;
+    font-size: clamp(0.9rem, 1.1vw, 1.1rem);
+    font-weight: 400;
+    color: #333333;
+    text-decoration: none;
+    transition: color 0.3s ease;
+
+    &:hover {
+        color: $color-hover;
+    }
+}
+
+// Tablet
+@media (max-width: $breakpoint-tablet) {
+    .footer {
+        padding: $spacing-xl 0;
+    }
+
+    .container {
+        gap: $spacing-md;
+    }
+
+    .navList {
+        gap: 2rem;
+    }
+}
+
+// Mobile
+@media (max-width: $breakpoint-mobile) {
+    .footer {
+        padding: $spacing-lg 0;
+    }
+
+    .container {
+        padding: 0 $spacing-sm;
+        gap: $spacing-md;
+    }
+
+    .navList {
+        gap: 1.5rem;
+    }
+}
+
