@@ -35,6 +35,15 @@ export const DeliverySection = ({ formData, errors, handleChange, handleWarehous
                 {errors.deliveryMethod && (
                     <span className={styles.error}>{errors.deliveryMethod}</span>
                 )}
+                {/* Предупреждение, если выбран способ доставки, требующий город, но город не выбран */}
+                {(formData.deliveryMethod === 'nova-poshta' || formData.deliveryMethod === 'postomat') &&
+                    (!formData.city || !formData.city.ref) && (
+                        <div className={styles.warning}>
+                            <span className={styles.warningText}>
+                                Спочатку оберіть населений пункт
+                            </span>
+                        </div>
+                    )}
             </div>
 
             {formData.deliveryMethod && warehouseType && (

@@ -33,12 +33,30 @@ export const useCheckoutForm = () => {
             const { name, value, type, checked } = e.target;
             const fieldValue = type === 'checkbox' ? checked : value;
 
-            setFormData((prev) => ({
-                ...prev,
-                [name]: fieldValue,
-                // Очищаем поле доставки при смене способа доставки
-                ...(name === 'deliveryMethod' && { deliveryPoint: null }),
-            }));
+            setFormData((prev) => {
+                const newData = {
+                    ...prev,
+                    [name]: fieldValue,
+                    // Очищаем поле доставки при смене способа доставки
+                    ...(name === 'deliveryMethod' && { deliveryPoint: null }),
+                };
+
+                // Проверка: если выбран способ доставки, требующий город, но город не выбран
+                if (name === 'deliveryMethod' && (value === 'nova-poshta' || value === 'postomat')) {
+                    if (!prev.city || !prev.city.ref) {
+                        // Устанавливаем ошибку для поля city
+                        setErrors((prevErrors) => ({
+                            ...prevErrors,
+                            city: 'Оберіть населений пункт',
+                        }));
+                    } else {
+                        // Если город выбран, очищаем ошибку
+                        clearFieldError('city');
+                    }
+                }
+
+                return newData;
+            });
 
             // Валидация в реальном времени для текстовых полей
             if (type !== 'checkbox' && type !== 'radio') {
@@ -48,8 +66,10 @@ export const useCheckoutForm = () => {
                     clearFieldError(name);
                 }
             } else {
-                // Для checkbox и radio сразу очищаем ошибку
-                clearFieldError(name);
+                // Для checkbox и radio сразу очищаем ошибку (кроме случая с deliveryMethod выше)
+                if (name !== 'deliveryMethod') {
+                    clearFieldError(name);
+                }
             }
         },
         [clearFieldError, errors]

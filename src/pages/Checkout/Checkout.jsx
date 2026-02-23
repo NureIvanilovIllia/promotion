@@ -18,6 +18,7 @@ const Checkout = () => {
     const { cart, totalPrice, clearCart } = useCart();
     const navigate = useNavigate();
     const [submitError, setSubmitError] = useState(null);
+    const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
     const {
         formData,
         errors,
@@ -78,9 +79,9 @@ const Checkout = () => {
             // Отправляем заказ
             await telegramService.sendOrder(orderData);
             
-            // Очищаем корзину и перенаправляем
+            // Очищаем корзину и показываем модальное окно успеха
             clearCart();
-            navigate('/', { state: { orderSuccess: true } });
+            setIsSuccessModalOpen(true);
         } catch (error) {
             // Обрабатываем ошибку с понятным сообщением
             const errorMessage = error.message || 'Помилка при відправці замовлення. Спробуйте ще раз.';
@@ -99,6 +100,11 @@ const Checkout = () => {
     const onSubmit = (e) => {
         e.preventDefault();
         handleSubmit(onSubmitOrder);
+    };
+
+    const handleCloseSuccessModal = () => {
+        setIsSuccessModalOpen(false);
+        navigate('/');
     };
 
     if (cart.length === 0) {
@@ -167,6 +173,34 @@ const Checkout = () => {
                     <OrderSummary cart={cart} totalPrice={totalPrice} />
                 </div>
             </div>
+
+            {/* Модальное окно успешного оформления заказа */}
+            {isSuccessModalOpen && (
+                <div
+                    className={styles.successModalOverlay}
+                    onClick={handleCloseSuccessModal}
+                >
+                    <div
+                        className={styles.successModal}
+                        onClick={(event) => event.stopPropagation()}
+                    >
+                        <div className={styles.successModalIcon}>✓</div>
+                        <p className={styles.successModalText}>
+                            Замовлення успішно оформлено!
+                        </p>
+                        <p className={styles.successModalSubtext}>
+                            Наш менеджер зв'яжеться з вами найближчим часом
+                        </p>
+                        <button
+                            type="button"
+                            className={styles.successModalButton}
+                            onClick={handleCloseSuccessModal}
+                        >
+                            На головну
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

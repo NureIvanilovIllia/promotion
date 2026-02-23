@@ -1,16 +1,17 @@
 [build]
-  command = "npm run build"
   functions = "netlify/functions"
   publish = "build"
 
-# Переменные окружения для production
-# ВАЖНО: чутливі дані (Telegram токен, chat_id) зберігайте ТІЛЬКИ в Netlify Dashboard
-# Site settings → Environment variables
-[build.environment]
-  NOVA_POSHTA_API_KEY = "d3c173b790c6f326953788005bff7ec3"
 
+# Redirect API calls to Netlify Functions
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
+  status = 200
+
+# SPA fallback - redirect all routes to index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
   status = 200
 

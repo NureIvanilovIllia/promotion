@@ -32,6 +32,11 @@ export const PaymentSection = ({ formData, errors, handleChange }) => {
                 {errors.paymentMethod && (
                     <span className={styles.error}>{errors.paymentMethod}</span>
                 )}
+                {formData.paymentMethod === 'online' && (
+                    <div className={styles.infoText}>
+                        Для оплати онлайн з вами зв'яжеться менеджер компанії
+                    </div>
+                )}
             </div>
 
             <div className={styles.formGroup}>
@@ -44,7 +49,7 @@ export const PaymentSection = ({ formData, errors, handleChange }) => {
                         className={styles.checkbox}
                     />
                     <span>
-                        Я згоден на обробку персональних даних{' '}
+                        Я згоден(на) на обробку персональних даних{' '}
                         <span className={styles.required}>*</span>
                     </span>
                 </label>
