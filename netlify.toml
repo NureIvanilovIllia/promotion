@@ -2,7 +2,6 @@
   functions = "netlify/functions"
   publish = "build"
 
-
 # Redirect API calls to Netlify Functions
 [[redirects]]
   from = "/api/*"
