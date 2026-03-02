@@ -4,6 +4,16 @@
 class NovaPoshtaClientService {
     constructor(baseUrl = '/api') {
         this.baseUrl = baseUrl;
+
+        /**
+         * Простой in-memory кэш:
+         *  - settlementsCache: ключ = search.toLowerCase()
+         *  - warehousesCache: ключ = `${settlementRef}|${warehouseType}|${search || ''}`
+         *
+         * Кэш живёт только в рамках сессии и не трогает LocalStorage.
+         */
+        this.settlementsCache = new Map();
+        this.warehousesCache = new Map();
     }
 
     /**
@@ -14,6 +24,11 @@ class NovaPoshtaClientService {
     async getSettlements(search) {
         if (!search || search.length < 2) {
             return [];
+        }
+
+        const key = search.toLowerCase().trim();
+        if (this.settlementsCache.has(key)) {
+            return this.settlementsCache.get(key);
         }
 
         try {
@@ -27,7 +42,11 @@ class NovaPoshtaClientService {
             }
 
             const result = await response.json();
-            return result.data || [];
+            const data = result.data || [];
+
+            this.settlementsCache.set(key, data);
+
+            return data;
         } catch (error) {
             throw new Error(error.message || 'Помилка завантаження населених пунктів');
         }
@@ -43,6 +62,11 @@ class NovaPoshtaClientService {
     async getWarehouses(settlementRef, warehouseType, search = null) {
         if (!settlementRef || !warehouseType) {
             return [];
+        }
+
+        const key = `${settlementRef}|${warehouseType}|${(search || '').toLowerCase().trim()}`;
+        if (this.warehousesCache.has(key)) {
+            return this.warehousesCache.get(key);
         }
 
         try {
@@ -64,7 +88,11 @@ class NovaPoshtaClientService {
             }
 
             const result = await response.json();
-            return result.data || [];
+            const data = result.data || [];
+
+            this.warehousesCache.set(key, data);
+
+            return data;
         } catch (error) {
             throw new Error(error.message || 'Помилка завантаження відділень');
         }

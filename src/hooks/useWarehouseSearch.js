@@ -47,6 +47,10 @@ export const useWarehouseSearch = (settlementRef, warehouseType) => {
 
     /**
      * Обработка изменения поискового запроса с debounce
+     * 
+     * Оптимизация:
+     *  - не загружаем все отделения города "оптом"
+     *  - делаем запрос только когда пользователь ввёл хотя бы 1 символ
      */
     useEffect(() => {
         // Очищаем предыдущий таймер
@@ -54,13 +58,17 @@ export const useWarehouseSearch = (settlementRef, warehouseType) => {
             clearTimeout(debounceTimerRef.current);
         }
 
+        // Если нет поискового термина — просто очищаем список и не ходим в API
+        if (searchTerm.length === 0) {
+            setSuggestions([]);
+            setErrorMessage(null);
+            return;
+        }
+
         // Устанавливаем новый таймер
         debounceTimerRef.current = setTimeout(() => {
             if (searchTerm.length >= 1) {
                 fetchWarehouses(searchTerm);
-            } else if (searchTerm.length === 0 && settlementRef && warehouseType) {
-                // При очистке поля загружаем все отделения
-                fetchWarehouses(null);
             }
         }, 450);
 
@@ -70,25 +78,30 @@ export const useWarehouseSearch = (settlementRef, warehouseType) => {
                 clearTimeout(debounceTimerRef.current);
             }
         };
-    }, [searchTerm, fetchWarehouses, settlementRef, warehouseType]);
+    }, [searchTerm, fetchWarehouses]);
 
     /**
      * Очистка результатов поиска
      */
     const clearSearch = useCallback(() => {
         setSearchTerm('');
-        setSuggestions([]);
-        setErrorMessage(null);
     }, []);
 
     /**
-     * Загрузка всех отделений при фокусе
+     * Загрузка всех отделений при фокусе (без поискового запроса)
      */
     const loadAllWarehouses = useCallback(() => {
-        if (!searchTerm && settlementRef && warehouseType) {
-            fetchWarehouses(null);
+        if (!settlementRef || !warehouseType) {
+            return;
         }
-    }, [searchTerm, settlementRef, warehouseType, fetchWarehouses]);
+
+        // Если уже есть результаты или идёт загрузка — не дергаем API лишний раз
+        if (suggestions.length > 0 || isLoading) {
+            return;
+        }
+
+        fetchWarehouses(null);
+    }, [settlementRef, warehouseType, suggestions.length, isLoading, fetchWarehouses]);
 
     return {
         searchTerm,

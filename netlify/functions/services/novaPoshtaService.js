@@ -44,22 +44,28 @@ class NovaPoshtaService {
 
     /**
      * Получить список отделений/почтоматов
+     *
+     * Для типа `branch`:
+     *  - загружаем ВСЕ типы отделений для нас. пункта
+     *  - затем на нашей стороне отфильтровываем почтоматы
+     *
+     * Для типа `postomat`:
+     *  - сразу фильтруем на стороне API по TypeOfWarehouseRef почтоматов
      */
     async getWarehouses(settlementRef, warehouseType, search = null) {
-        const typeOfWarehouseRefMap = {
-            branch: '841339c7-591a-42e2-8233-7a0a00f0ed6f',
-            postomat: 'f9316480-5f2d-425d-bc2c-ac7cd29decf0',
-        };
-
-        const typeOfWarehouseRef = typeOfWarehouseRefMap[warehouseType];
-        if (!typeOfWarehouseRef) {
-            throw new Error('Invalid warehouse type');
-        }
+        // Идентификатор типа "Поштомат" из довідника НП
+        const POSTOMAT_TYPE_REF = 'f9316480-5f2d-425d-bc2c-ac7cd29decf0';
 
         const methodProperties = {
-            TypeOfWarehouseRef: typeOfWarehouseRef,
             SettlementRef: settlementRef,
+            // Ограничиваем количество результатов для ускорения ответа
+            Limit: 50,
         };
+
+        // Для почтоматов запрашиваем только их на стороне API
+        if (warehouseType === 'postomat') {
+            methodProperties.TypeOfWarehouseRef = POSTOMAT_TYPE_REF;
+        }
 
         if (search) {
             methodProperties.FindByString = search;
@@ -84,7 +90,24 @@ class NovaPoshtaService {
             throw new Error(data.errors?.[0] || 'API error');
         }
 
-        return data.data || [];
+        let warehouses = data.data || [];
+
+        // Для "Самовивіз з Нової Пошти" исключаем почтоматы,
+        // чтобы отображались ВСІ види відділень, крім поштоматів
+        if (warehouseType === 'branch') {
+            warehouses = warehouses.filter((item) => {
+                const isPostomatByType =
+                    item.TypeOfWarehouseRef === POSTOMAT_TYPE_REF;
+
+                const desc = `${item.Description || ''} ${item.ShortAddress || ''}`.toLowerCase();
+                const isPostomatByText =
+                    desc.includes('поштомат') || desc.includes('почтомат');
+
+                return !isPostomatByType && !isPostomatByText;
+            });
+        }
+
+        return warehouses;
     }
 }
 

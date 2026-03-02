@@ -73,6 +73,8 @@ const BundlesSection = () => {
                                     }
                                     alt={bundle.title}
                                     className={styles.image}
+                                    loading="lazy"
+                                    decoding="async"
                                 />
                             </div>
 

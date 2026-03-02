@@ -33,7 +33,12 @@ const ContactsSection = () => {
     return (
         <section id={SECTION_IDS.CONTACTS} className={styles.contacts}>
             <div className={styles.backgroundImage}>
-                <img src={contactImage} alt="Contact background" />
+                <img
+                    src={contactImage}
+                    alt="Contact background"
+                    loading="lazy"
+                    decoding="async"
+                />
             </div>
 
             <div className={styles.container}>
@@ -49,7 +54,12 @@ const ContactsSection = () => {
                             {contactItems.map((item, index) => (
                                 <div key={index} className={styles.contactItem}>
                                     <div className={styles.contactIcon}>
-                                        <img src={item.icon} alt={item.alt} />
+                                        <img
+                                            src={item.icon}
+                                            alt={item.alt}
+                                            loading="lazy"
+                                            decoding="async"
+                                        />
                                     </div>
                                     <div className={styles.contactInfo}>
                                         <span className={styles.contactLabel}>

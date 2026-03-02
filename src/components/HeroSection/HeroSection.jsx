@@ -20,6 +20,7 @@ const HeroSection = () => {
                     src={heroImage}
                     alt="Garden background"
                     className={styles.backgroundImage}
+                    decoding="async"
                 />
                 <div className={styles.backgroundOverlay} />
             </div>

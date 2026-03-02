@@ -43,18 +43,23 @@ const CitySelect = ({ value, onChange, onSelect, error, selectedCity }) => {
 
     /**
      * Обработка выбора популярного города
+     *
+     * Оптимизация и фикc:
+     *  - используем Ref из локальных констант POPULAR_CITIES,
+     *    чтобы не зависеть от выборки API (особенно для міст типу "Запоріжжя")
+     *  - не делаем лишний запрос к getSettlements
      */
-    const handlePopularCityClick = async (cityName) => {
-        setSearchTerm(cityName);
-        try {
-            const cities = await novaPoshtaService.getSettlements(cityName);
-            if (cities.length > 0) {
-                const exactMatch = cities.find((c) => c.name === cityName) || cities[0];
-                handleSelectCity(exactMatch);
-            }
-        } catch (err) {
-            // Ошибка обрабатывается через errorMessage в хуке
-        }
+    const handlePopularCityClick = (popularCity) => {
+        // Обновляем поисковую строку только для UX
+        setSearchTerm(popularCity.name);
+
+        // Передаём наверх данные из констант (ref гарантированно наш)
+        handleSelectCity({
+            ref: popularCity.ref,
+            name: popularCity.name,
+            type: popularCity.type || '',
+            area: popularCity.area || '',
+        });
     };
 
     /**
@@ -138,7 +143,7 @@ const CitySelect = ({ value, onChange, onSelect, error, selectedCity }) => {
                                 <button
                                     key={city.ref}
                                     type="button"
-                                    onClick={() => handlePopularCityClick(city.name)}
+                                    onClick={() => handlePopularCityClick(city)}
                                     className={styles.popularCityButton}
                                 >
                                     {city.name}

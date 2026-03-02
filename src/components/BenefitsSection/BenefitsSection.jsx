@@ -52,7 +52,12 @@ const BenefitsSection = () => {
                     {BENEFITS.map((benefit) => (
                         <article key={benefit.id} className={styles.card}>
                             <div className={styles.cardIcon}>
-                                <img src={benefit.icon} alt={benefit.title} />
+                                <img
+                                    src={benefit.icon}
+                                    alt={benefit.title}
+                                    loading="lazy"
+                                    decoding="async"
+                                />
                             </div>
                             <h3 className={styles.cardTitle}>
                                 {benefit.title}

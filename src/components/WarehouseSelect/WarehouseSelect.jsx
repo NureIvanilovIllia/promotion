@@ -74,9 +74,17 @@ const WarehouseSelect = ({ settlementRef, warehouseType, onSelect, error, select
 
     /**
      * Обработка фокуса на input
+     *
+     * Теперь:
+     *  - при первом фокусе без введённого текста подгружаем список отделений/поштоматів
+     *  - если результаты уже есть — просто открываем dropdown
      */
     const handleInputFocus = () => {
-        if (!searchTerm && !selectedWarehouse) {
+        if (isDisabled) {
+            return;
+        }
+
+        if (!searchTerm && !selectedWarehouse && suggestions.length === 0) {
             loadAllWarehouses();
         } else if (suggestions.length > 0) {
             setIsOpen(true);
