@@ -1,7 +1,5 @@
-import React from 'react';
 import { useModal } from '../../hooks/useModal';
 import { useCitySearch } from '../../hooks/useCitySearch';
-import { novaPoshtaService } from '../../services/novaPoshtaService';
 import { POPULAR_CITIES } from '../../constants/cities';
 import styles from './CitySelect.module.scss';
 
