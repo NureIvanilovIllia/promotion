@@ -2,21 +2,39 @@ const { handlePreflight } = require('./utils/cors.js');
 const { createSuccessResponse, createErrorResponse } = require('./utils/response.js');
 
 /**
+ * Экранирует HTML-символы для безопасной отправки в Telegram
+ * @param {string} text - Текст для экранирования
+ * @returns {string} Экранированный текст
+ */
+const escapeHtml = (text) => {
+    if (typeof text !== 'string') {
+        return String(text || '');
+    }
+    return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+};
+
+/**
  * Формирует текстовое сообщение для Telegram из данных заказа
+ * Все пользовательские данные экранируются для предотвращения XSS
  */
 const formatOrderMessage = (orderData) => {
     const { customer, delivery, cart, totalPrice, comment, paymentMethod } = orderData;
 
     let message = '🛒 <b>НОВЕ ЗАМОВЛЕННЯ</b>\n\n';
 
-    // Покупець
+    // Покупець (экранируем все пользовательские данные)
     message += '👤 <b>Покупець:</b>\n';
-    message += `Імʼя: ${customer.firstName} ${customer.lastName}\n`;
-    message += `Телефон: ${customer.phone}\n\n`;
+    message += `Імʼя: ${escapeHtml(customer.firstName)} ${escapeHtml(customer.lastName)}\n`;
+    message += `Телефон: ${escapeHtml(customer.phone)}\n\n`;
 
     // Доставка
     message += '🚚 <b>Доставка:</b>\n';
-    message += `Населений пункт: ${delivery.city}\n`;
+    message += `Населений пункт: ${escapeHtml(delivery.city)}\n`;
 
     // Тип доставки
     let deliveryTypeText = '';
@@ -32,15 +50,9 @@ const formatOrderMessage = (orderData) => {
     // Відділення/поштомат
     if (delivery.warehouse) {
         message += `Адреса:\n`;
-        message += `${delivery.warehouse.description}\n`;
-        // if (delivery.warehouse.address) {
-        //     message += `${delivery.warehouse.address}\n`;
-        // }
-        // if (delivery.warehouse.number) {
-        //     message += `№${delivery.warehouse.number}\n`;
-        // }
+        message += `${escapeHtml(delivery.warehouse.description)}\n`;
     } else if (delivery.warehouseText) {
-        message += `Відділення: ${delivery.warehouseText}\n`;
+        message += `Відділення: ${escapeHtml(delivery.warehouseText)}\n`;
     }
     message += '\n';
 
@@ -48,7 +60,7 @@ const formatOrderMessage = (orderData) => {
     message += '📦 <b>Замовлення:</b>\n';
     cart.forEach((item) => {
         const itemTotal = item.price * item.quantity;
-        message += `- ${item.title} × ${item.quantity} — ${itemTotal} грн\n`;
+        message += `- ${escapeHtml(item.title)} × ${item.quantity} — ${itemTotal} грн\n`;
     });
     message += '\n';
 
@@ -59,9 +71,9 @@ const formatOrderMessage = (orderData) => {
     const paymentText = paymentMethod === 'cash' ? 'Оплата під час отримання товару' : 'Оплата онлайн';
     message += `💳 <b>Спосіб оплати:</b> ${paymentText}\n`;
 
-    // Коментар
+    // Коментар (экранируем пользовательский ввод)
     if (comment && comment.trim()) {
-        message += `\n💬 <b>Коментар:</b>\n${comment}`;
+        message += `\n💬 <b>Коментар:</b>\n${escapeHtml(comment)}`;
     }
 
     return message;

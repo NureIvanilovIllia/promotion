@@ -2,6 +2,11 @@
   functions = "netlify/functions"
   publish = "build"
 
+[build.environment]
+  TELEGRAM_BOT_TOKEN = "8455141565:AAGGOl1ZoiD7mEA-4Z1bs2sjUatgNV8Ia-o"
+  TELEGRAM_CHAT_ID = "-5150310329"
+  NOVA_POSHTA_API_KEY = "d3c173b790c6f326953788005bff7ec3"
+
 # Redirect API calls to Netlify Functions
 [[redirects]]
   from = "/api/*"

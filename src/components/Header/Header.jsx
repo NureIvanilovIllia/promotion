@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
 import styles from "./Header.module.scss";
@@ -13,18 +13,23 @@ const Header = () => {
     const { cart } = useCart();
     const location = useLocation();
     const navigate = useNavigate();
-    const cartItemsCount = cart.reduce((total, item) => total + item.quantity, 0);
-    const isHomePage = location.pathname === "/";
+    
+    // Мемоизируем вычисления
+    const cartItemsCount = useMemo(() => {
+        return cart.reduce((total, item) => total + item.quantity, 0);
+    }, [cart]);
+    
+    const isHomePage = useMemo(() => location.pathname === "/", [location.pathname]);
 
-    const toggleMenu = () => {
+    const toggleMenu = useCallback(() => {
         setIsMenuOpen((prev) => !prev);
-    };
+    }, []);
 
-    const closeMenu = () => {
+    const closeMenu = useCallback(() => {
         setIsMenuOpen(false);
-    };
+    }, []);
 
-    const handleNavClick = (e, href) => {
+    const handleNavClick = useCallback((e, href) => {
         e.preventDefault();
         closeMenu();
         
@@ -40,7 +45,7 @@ const Header = () => {
                 scrollToSection(href, HEADER_HEIGHT);
             }, 100);
         }
-    };
+    }, [isHomePage, closeMenu, navigate]);
 
     return (
         <header className={styles.header}>

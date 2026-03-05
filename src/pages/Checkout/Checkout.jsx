@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import { useCart } from "../../hooks/useCart";
@@ -18,7 +18,6 @@ const Checkout = () => {
     const { cart, totalPrice, clearCart } = useCart();
     const navigate = useNavigate();
     const [submitError, setSubmitError] = useState(null);
-    const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
     const {
         formData,
         errors,
@@ -32,79 +31,57 @@ const Checkout = () => {
     /**
      * Обработка отправки формы заказа
      */
-    const onSubmitOrder = async (formData) => {
+    const onSubmitOrder = useCallback(async (formData) => {
         setSubmitError(null);
 
         try {
-            // Дополнительная валидация перед отправкой
+            // Базовая валидация корзины
             if (cart.length === 0) {
-                setSubmitError('Ваш кошик порожній. Додайте товари до кошика перед оформленням замовлення.');
+                setSubmitError(
+                    "Ваш кошик порожній. Додайте товари до кошика перед оформленням замовлення.",
+                );
                 return;
             }
 
             if (totalPrice <= 0) {
-                setSubmitError('Сума замовлення повинна бути більше нуля.');
+                setSubmitError("Сума замовлення повинна бути більше нуля.");
                 return;
             }
 
             // Формируем данные заказа
             const orderData = prepareOrderData(formData, cart, totalPrice);
 
-            // Валидация данных перед отправкой
-            if (!orderData.customer.firstName || !orderData.customer.lastName || !orderData.customer.phone) {
-                setSubmitError('Перевірте дані отримувача. Всі поля обов\'язкові.');
-                return;
-            }
-
-            if (!orderData.delivery.city) {
-                setSubmitError('Оберіть населений пункт для доставки.');
-                return;
-            }
-
-            if (!orderData.delivery.type) {
-                setSubmitError('Оберіть спосіб доставки.');
-                return;
-            }
-
-            if (!orderData.delivery.warehouse && !orderData.delivery.warehouseText) {
-                setSubmitError('Вкажіть відділення/поштомат для доставки.');
-                return;
-            }
-
-            if (!orderData.paymentMethod) {
-                setSubmitError('Оберіть спосіб оплати.');
-                return;
-            }
-
             // Отправляем заказ
             await telegramService.sendOrder(orderData);
             
-            // Очищаем корзину и показываем модальное окно успеха
+            // Очищаем корзину и перенаправляем на страницу успеха
             clearCart();
-            setIsSuccessModalOpen(true);
+            navigate("/success");
         } catch (error) {
             // Обрабатываем ошибку с понятным сообщением
-            const errorMessage = error.message || 'Помилка при відправці замовлення. Спробуйте ще раз.';
+            const errorMessage =
+                error.message ||
+                "Помилка при відправці замовлення. Спробуйте ще раз.";
             setSubmitError(errorMessage);
-            
+
             // Прокручиваем к ошибке
             setTimeout(() => {
-                const errorElement = document.querySelector(`.${styles.errorMessage}`);
+                const errorElement = document.querySelector(
+                    `.${styles.errorMessage}`,
+                );
                 if (errorElement) {
-                    errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    errorElement.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center",
+                    });
                 }
             }, 100);
         }
-    };
+    }, [cart, totalPrice, clearCart, navigate]);
 
     const onSubmit = (e) => {
         e.preventDefault();
         handleSubmit(onSubmitOrder);
-    };
-
-    const handleCloseSuccessModal = () => {
-        setIsSuccessModalOpen(false);
-        navigate('/');
     };
 
     if (cart.length === 0) {
@@ -163,9 +140,10 @@ const Checkout = () => {
                             <button
                                 type="submit"
                                 className={styles.submitButton}
-                                disabled={isSubmitting}
-                            >
-                                {isSubmitting ? 'Відправка...' : 'Оформити замовлення'}
+                                disabled={isSubmitting}>
+                                {isSubmitting
+                                    ? "Відправка..."
+                                    : "Оформити замовлення"}
                             </button>
                         </div>
                     </form>
@@ -173,34 +151,6 @@ const Checkout = () => {
                     <OrderSummary cart={cart} totalPrice={totalPrice} />
                 </div>
             </div>
-
-            {/* Модальное окно успешного оформления заказа */}
-            {isSuccessModalOpen && (
-                <div
-                    className={styles.successModalOverlay}
-                    onClick={handleCloseSuccessModal}
-                >
-                    <div
-                        className={styles.successModal}
-                        onClick={(event) => event.stopPropagation()}
-                    >
-                        <div className={styles.successModalIcon}>✓</div>
-                        <p className={styles.successModalText}>
-                            Замовлення успішно оформлено!
-                        </p>
-                        <p className={styles.successModalSubtext}>
-                            Наш менеджер зв'яжеться з вами найближчим часом
-                        </p>
-                        <button
-                            type="button"
-                            className={styles.successModalButton}
-                            onClick={handleCloseSuccessModal}
-                        >
-                            На головну
-                        </button>
-                    </div>
-                </div>
-            )}
         </div>
     );
 };

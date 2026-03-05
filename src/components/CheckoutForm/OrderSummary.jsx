@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { memo } from 'react';
 import styles from '../../pages/Checkout/Checkout.module.scss';
 
 /**
  * Компонент отображения сводки заказа
+ * Мемоизирован для оптимизации ре-рендеров
  */
-export const OrderSummary = ({ cart, totalPrice }) => {
+export const OrderSummary = memo(({ cart, totalPrice }) => {
     return (
         <div className={styles.summary}>
             <h2 className={styles.summaryTitle}>Ваше замовлення</h2>
@@ -27,5 +28,7 @@ export const OrderSummary = ({ cart, totalPrice }) => {
             </div>
         </div>
     );
-};
+});
+
+OrderSummary.displayName = 'OrderSummary';
 

@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./BundlesSection.module.scss";
 import { SECTION_IDS } from "../../constants/navigation";
 import { MODAL_CLOSE_ANIMATION_DURATION } from "../../constants/app";
 import { formatBundleTitle } from "../../utils/formatBundleTitle";
 import { useCart } from "../../hooks/useCart";
+import { trackAddToCart } from "../../utils/analytics";
 import cardImage from "../../assets/images/card.webp";
 import cardImageIrrigation from "../../assets/images/card2.webp";
 import { greenhouseBundles, irrigationKit3m } from "../../data/bundles";
@@ -29,29 +30,18 @@ const BundlesSection = () => {
         }, MODAL_CLOSE_ANIMATION_DURATION);
     };
 
-    const handleAddToCart = (bundle) => {
-        addItem({
+    const handleAddToCart = useCallback((bundle) => {
+        const cartItem = {
             id: bundle.id,
             title: bundle.title,
             price: bundle.price,
             quantity: 1,
-        });
-        if (window.gtag) {
-        window.gtag("event", "add_to_cart", {
-            currency: "UAH",
-            value: bundle.price,
-            items: [
-                {
-                    item_id: bundle.id,
-                    item_name: bundle.title,
-                    price: bundle.price,
-                    quantity: 1
-                }
-            ]
-        });
-    }
+        };
+        
+        addItem(cartItem);
+        trackAddToCart(cartItem);
         setIsAddedModalOpen(true);
-    };
+    }, [addItem]);
 
     const handleCloseAddedModal = () => {
         setIsAddedModalOpen(false);

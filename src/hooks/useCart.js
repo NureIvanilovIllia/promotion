@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import { getItem, setItem } from './useLocalStorage';
 
 const CART_STORAGE_KEY = 'cart';
@@ -18,7 +18,7 @@ export const CartProvider = ({ children }) => {
   }, [cart]);
 
   // Добавить товар в корзину
-  const addItem = (item) => {
+  const addItem = useCallback((item) => {
     setCart((prevCart) => {
       const existingItem = prevCart.find((cartItem) => cartItem.id === item.id);
       
@@ -34,15 +34,15 @@ export const CartProvider = ({ children }) => {
         return [...prevCart, { ...item, quantity: item.quantity || 1 }];
       }
     });
-  };
+  }, []);
 
   // Удалить товар из корзины
-  const removeItem = (itemId) => {
+  const removeItem = useCallback((itemId) => {
     setCart((prevCart) => prevCart.filter((item) => item.id !== itemId));
-  };
+  }, []);
 
   // Обновить количество товара
-  const updateQuantity = (itemId, quantity) => {
+  const updateQuantity = useCallback((itemId, quantity) => {
     if (quantity <= 0) {
       removeItem(itemId);
       return;
@@ -53,26 +53,29 @@ export const CartProvider = ({ children }) => {
         item.id === itemId ? { ...item, quantity } : item
       )
     );
-  };
+  }, [removeItem]);
 
   // Очистить корзину
-  const clearCart = () => {
+  const clearCart = useCallback(() => {
     setCart([]);
-  };
+  }, []);
 
-  // Вычислить общую стоимость
-  const totalPrice = cart.reduce((total, item) => {
-    return total + item.price * item.quantity;
-  }, 0);
+  // Вычислить общую стоимость (мемоизировано)
+  const totalPrice = useMemo(() => {
+    return cart.reduce((total, item) => {
+      return total + item.price * item.quantity;
+    }, 0);
+  }, [cart]);
 
-  const value = {
+  // Мемоизируем значение контекста
+  const value = useMemo(() => ({
     cart,
     addItem,
     removeItem,
     updateQuantity,
     clearCart,
     totalPrice,
-  };
+  }), [cart, addItem, removeItem, updateQuantity, clearCart, totalPrice]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 };
