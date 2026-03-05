@@ -36,7 +36,20 @@ const BundlesSection = () => {
             price: bundle.price,
             quantity: 1,
         });
-
+        if (window.gtag) {
+        window.gtag("event", "add_to_cart", {
+            currency: "UAH",
+            value: bundle.price,
+            items: [
+                {
+                    item_id: bundle.id,
+                    item_name: bundle.title,
+                    price: bundle.price,
+                    quantity: 1
+                }
+            ]
+        });
+    }
         setIsAddedModalOpen(true);
     };
 
